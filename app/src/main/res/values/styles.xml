@@ -1,0 +1,17 @@
+<resources>
+
+    <!-- Base application theme. -->
+    <style name="AppTheme.base" parent="Theme.AppCompat.Light.NoActionBar">
+        <!-- Customize your theme here. -->
+        //toolbar
+        <item name="colorPrimary">@color/cyan700</item>
+        //title
+        <item name="android:textColorPrimary">@color/cyan50</item>
+        //overflow
+        <item name="colorControlNormal">@color/cyan50</item>
+        //状态栏
+        <item name="colorPrimaryDark">@color/cyan800</item>
+
+    </style>
+
+</resources>
