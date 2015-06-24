@@ -2,6 +2,8 @@ package com.light.myilists;
 
 import android.content.Intent;
 import android.os.Bundle;
+import android.os.Handler;
+import android.os.Message;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
@@ -13,6 +15,7 @@ import com.light.myilists.activity.EditTodoActivity;
 import com.light.myilists.adapter.TodoListAdapter;
 import com.light.myilists.db.DataBaseUtils;
 import com.light.myilists.model.TodoInfoBean;
+import com.light.myilists.widget.CustomItemAnimator;
 import com.light.myilists.widget.SwipeAddLayout;
 
 import java.util.ArrayList;
@@ -26,7 +29,7 @@ public class MainActivity extends AppCompatActivity {
 
     private RecyclerView recyclerView;
 
-    private RecyclerView.Adapter adapter;
+    private TodoListAdapter adapter;
 
     private List<TodoInfoBean> todoInfoList;
 
@@ -52,43 +55,67 @@ public class MainActivity extends AppCompatActivity {
                 Intent intent = new Intent(MainActivity.this, EditTodoActivity.class);
                 intent.putExtra(EditTodoActivity.ITEM_PRIORITY, 0);
                 intent.putExtra(EditTodoActivity.ITME_CONTENT, "");
-                startActivity(intent);
+                startActivityForResult(intent,EditTodoActivity.INTENT_ADD);
 
                 swipeAddLayout.setRefreshing(false);
             }
         });
 
-        initData();
 
-        todoInfoList = DataBaseUtils.queryStudent(this);
+        todoInfoList = new ArrayList<TodoInfoBean>();
         adapter = new TodoListAdapter(this,null,todoInfoList);
 
         recyclerView = (RecyclerView)findViewById(R.id.list);
+        recyclerView.setHasFixedSize(true);
         recyclerView.setLayoutManager(new LinearLayoutManager(this));
+        recyclerView.setItemAnimator(new CustomItemAnimator());
         recyclerView.setAdapter(adapter);
 
-    }
 
-    private void initData(){
-
-        todoInfoList = new ArrayList<TodoInfoBean>();
-
-        TodoInfoBean bean = new TodoInfoBean(0,"6 / 7","超市买被子",0);
-        TodoInfoBean bean1 = new TodoInfoBean(0,"12 / 7","校对 Android Source",1);
-        TodoInfoBean bean2 = new TodoInfoBean(0,"11 / 7","帮小明拍照",2);
-        TodoInfoBean bean3 = new TodoInfoBean(0,"4 / 7","学校调档案",3);
-        TodoInfoBean bean4 = new TodoInfoBean(0,"1 / 7","完成表格应用",4);
-
-        todoInfoList.add(bean);
-        todoInfoList.add(bean1);
-        todoInfoList.add(bean2);
-        todoInfoList.add(bean3);
-        todoInfoList.add(bean4);
-
-        DataBaseUtils.insertTodoList(this,bean);
-        DataBaseUtils.insertTodoList(this,bean1);
+        handler.postAtTime(new Runnable() {
+            @Override
+            public void run() {
+                handler.sendEmptyMessage(0);
+            }
+        },500);
 
     }
+
+    private Handler handler = new Handler(){
+
+        @Override
+        public void handleMessage(Message msg) {
+            super.handleMessage(msg);
+
+            switch(msg.what){
+                case 0:
+                    refreshData();
+                    break;
+            }
+        }
+    };
+
+
+    private void refreshData(){
+        todoInfoList = DataBaseUtils.queryStudent(this);
+        adapter.addInfo(todoInfoList);
+    }
+
+
+
+//    @Override
+//    protected void onRestart() {
+//        super.onRestart();
+//        adapter.clearApplications();
+//
+//        handler.postAtTime(new Runnable() {
+//            @Override
+//            public void run() {
+//                handler.sendEmptyMessage(0);
+//            }
+//        },500);
+//
+//    }
 
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
@@ -110,5 +137,23 @@ public class MainActivity extends AppCompatActivity {
         }
 
         return super.onOptionsItemSelected(item);
+    }
+
+    @Override
+    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+        super.onActivityResult(requestCode, resultCode, data);
+
+        if(resultCode == EditTodoActivity.INTENT_ADD){
+            adapter.clearApplications();
+
+            handler.postAtTime(new Runnable() {
+                @Override
+                public void run() {
+                    handler.sendEmptyMessage(0);
+                }
+            },500);
+
+        }
+
     }
 }

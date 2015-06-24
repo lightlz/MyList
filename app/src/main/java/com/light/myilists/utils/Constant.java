@@ -9,8 +9,8 @@ public class Constant {
 
     public static final int[] PRIORITY_COLOR = {
             R.color.cyan900,
-            R.color.cyan700,
-            R.color.cyan500,
+            R.color.cyan800,
+            R.color.cyan600,
             R.color.cyan400,
-            R.color.cyan300};
+            R.color.cyan200};
 }

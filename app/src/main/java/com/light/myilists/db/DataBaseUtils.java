@@ -3,8 +3,10 @@ package com.light.myilists.db;
 import android.content.Context;
 
 import com.j256.ormlite.dao.RuntimeExceptionDao;
+import com.j256.ormlite.stmt.QueryBuilder;
 import com.light.myilists.model.TodoInfoBean;
 
+import java.sql.SQLException;
 import java.util.List;
 
 /**
@@ -32,7 +34,14 @@ public class DataBaseUtils {
         RuntimeExceptionDao<TodoInfoBean, Integer> simpleTodoDao = DatabaseHelper.getHelper(context)
                 .getSimpleTodoDao();
 
-        List<TodoInfoBean> list = simpleTodoDao.queryForAll();
+        QueryBuilder queryBuilder = simpleTodoDao.queryBuilder();
+        queryBuilder.orderBy("priority",true);
+        List<TodoInfoBean> list = null;
+        try {
+            list = queryBuilder.query();
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
         return list;
     }
 

@@ -12,6 +12,7 @@ import com.light.myilists.R;
 import com.light.myilists.activity.EditTodoActivity;
 import com.light.myilists.model.TodoInfoBean;
 import com.light.myilists.utils.Constant;
+import com.light.myilists.utils.DateUtils;
 
 import java.util.List;
 import java.util.logging.Handler;
@@ -34,6 +35,27 @@ public class TodoListAdapter extends RecyclerView.Adapter<TodoListAdapter.ViewHo
         this.list = list;
     }
 
+    public void updateInfo(List<TodoInfoBean> infoBeans){
+        list = infoBeans;
+        this.notifyDataSetChanged();
+    }
+
+    public void addInfo(List<TodoInfoBean> infoBeans){
+        list.addAll(infoBeans);
+        this.notifyItemRangeInserted(0, list.size() - 1);
+    }
+
+    public void clearApplications() {
+        int size = this.list.size();
+        if (size > 0) {
+            for (int i = 0; i < size; i++) {
+                list.remove(0);
+            }
+
+            this.notifyItemRangeRemoved(0, size);
+        }
+    }
+
     @Override
     public ViewHolder onCreateViewHolder(ViewGroup viewGroup, int i) {
         return new ViewHolder(LayoutInflater.from(context).inflate(R.layout.item_list,viewGroup,false));
@@ -44,7 +66,7 @@ public class TodoListAdapter extends RecyclerView.Adapter<TodoListAdapter.ViewHo
 
         final int index = i;
 
-        viewHolder.tvCreatedTime.setText(list.get(i).getCreated_time());
+        viewHolder.tvCreatedTime.setText(DateUtils.getDate(Long.parseLong(list.get(i).getCreated_time())));
         viewHolder.tvCreatedTime.setBackgroundResource(Constant.PRIORITY_COLOR[list.get(index).getPriority()]);
         viewHolder.tvContent.setText(list.get(i).getContent());
 
