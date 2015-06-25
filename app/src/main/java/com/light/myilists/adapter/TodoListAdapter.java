@@ -1,7 +1,8 @@
 package com.light.myilists.adapter;
 
 import android.content.Context;
-import android.content.Intent;
+import android.os.Handler;
+import android.os.Message;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -9,13 +10,11 @@ import android.view.ViewGroup;
 import android.widget.TextView;
 
 import com.light.myilists.R;
-import com.light.myilists.activity.EditTodoActivity;
 import com.light.myilists.model.TodoInfoBean;
 import com.light.myilists.utils.Constant;
 import com.light.myilists.utils.DateUtils;
 
 import java.util.List;
-import java.util.logging.Handler;
 
 /**
  * Created by light on 15/6/23.
@@ -74,10 +73,16 @@ public class TodoListAdapter extends RecyclerView.Adapter<TodoListAdapter.ViewHo
             @Override
             public void onClick(View view) {
 
-                Intent intent = new Intent(context, EditTodoActivity.class);
-                intent.putExtra(EditTodoActivity.ITEM_PRIORITY,list.get(index).getPriority());
-                intent.putExtra(EditTodoActivity.ITME_CONTENT,list.get(index).getContent());
-                context.startActivity(intent);
+//                Intent intent = new Intent(context, EditTodoActivity.class);
+//                intent.putExtra(EditTodoActivity.ITEM_PRIORITY,list.get(index).getPriority());
+//                intent.putExtra(EditTodoActivity.ITME_CONTENT,list.get(index).getContent());
+//                intent.putExtra(EditTodoActivity.ITEM_ID,list.get(index).getTodo_id());
+//                context.startActivity(intent);
+
+                Message msg = new Message();
+                msg.what = Constant.MSG_TODOLIST_CLICK;
+                msg.arg1 = index;
+                handler.sendMessage(msg);
 
             }
         });

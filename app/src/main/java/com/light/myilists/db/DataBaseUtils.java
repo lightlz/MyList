@@ -29,7 +29,12 @@ public class DataBaseUtils {
     }
 
 
-    public static List<TodoInfoBean> queryStudent(Context context){
+    /**
+     * TODO(获取全部 todolist)
+     * @param context
+     * @return
+     */
+    public static List<TodoInfoBean> queryTodoList(Context context){
 
         RuntimeExceptionDao<TodoInfoBean, Integer> simpleTodoDao = DatabaseHelper.getHelper(context)
                 .getSimpleTodoDao();
@@ -45,7 +50,17 @@ public class DataBaseUtils {
         return list;
     }
 
+    /**
+     * TODO(更新 todoList)
+     * @param context
+     * @param infoBean
+     */
+    public static void updateTodoList(Context context,TodoInfoBean infoBean){
 
+        RuntimeExceptionDao<TodoInfoBean, Integer> simpleTodoDao = DatabaseHelper.getHelper(context)
+                .getSimpleTodoDao();
+        simpleTodoDao.update(infoBean);
+    }
 
 
 }

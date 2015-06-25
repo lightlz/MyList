@@ -5,6 +5,7 @@ import android.content.Intent;
 import android.os.Bundle;
 import android.view.View;
 import android.widget.EditText;
+import android.widget.Toast;
 
 import com.getbase.floatingactionbutton.FloatingActionButton;
 import com.light.myilists.R;
@@ -21,11 +22,15 @@ public class EditTodoActivity extends Activity implements View.OnClickListener{
 
     public static final String ITME_CONTENT = "content";
 
-    public static final int INTENT_ADD = 0;
+    public static final String ITEM_ID = "id";
+
+    public static final int INTENT_ADD = 2;
 
     private int itemPriority;
 
     private String itemContent;
+
+    private int todoId;
 
     private EditText tvContent;
 
@@ -34,8 +39,6 @@ public class EditTodoActivity extends Activity implements View.OnClickListener{
     private FloatingActionButton fab2;
     private FloatingActionButton fab3;
     private FloatingActionButton fab4;
-
-
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -51,10 +54,12 @@ public class EditTodoActivity extends Activity implements View.OnClickListener{
 
         Intent intent = getIntent();
         itemContent = intent.getStringExtra(ITME_CONTENT);
-        itemPriority = intent.getIntExtra(ITEM_PRIORITY,-1);
+        itemPriority = intent.getIntExtra(ITEM_PRIORITY,Constant.VALUE_INDEFINE);
+        todoId = intent.getIntExtra(ITEM_ID,Constant.VALUE_INDEFINE);
 
         tvContent.setText(itemContent);
         tvContent.setBackgroundResource(Constant.PRIORITY_COLOR[itemPriority]);
+
 
         fab = (FloatingActionButton)findViewById(R.id.action_a);
         fab.setOnClickListener(this);
@@ -100,16 +105,26 @@ public class EditTodoActivity extends Activity implements View.OnClickListener{
     private void insertInfo(){
 
         itemContent = tvContent.getText().toString();
-        long createTime = System.currentTimeMillis();
 
-        TodoInfoBean bean = new TodoInfoBean();
-        bean.setContent(itemContent);
-        bean.setCreated_time(String.valueOf(createTime));
-        bean.setPriority(itemPriority);
+        if(itemContent.equals("")){
+            Toast.makeText(this,"Don't forget the content.",Toast.LENGTH_SHORT).show();
+        }else{
 
-        DataBaseUtils.insertTodoList(this, bean);
+            long createTime = System.currentTimeMillis();
+            TodoInfoBean bean = new TodoInfoBean();
+            bean.setContent(itemContent);
+            bean.setCreated_time(String.valueOf(createTime));
+            bean.setPriority(itemPriority);
 
-        setResult(INTENT_ADD);
-        this.finish();
+            if(todoId == Constant.VALUE_INDEFINE){
+                DataBaseUtils.insertTodoList(this, bean);
+            }else{
+                bean.setTodo_id(todoId);
+                DataBaseUtils.updateTodoList(this,bean);
+            }
+            setResult(INTENT_ADD);
+            this.finish();
+        }
+
     }
 }

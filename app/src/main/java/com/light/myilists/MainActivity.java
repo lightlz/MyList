@@ -15,6 +15,7 @@ import com.light.myilists.activity.EditTodoActivity;
 import com.light.myilists.adapter.TodoListAdapter;
 import com.light.myilists.db.DataBaseUtils;
 import com.light.myilists.model.TodoInfoBean;
+import com.light.myilists.utils.Constant;
 import com.light.myilists.widget.CustomItemAnimator;
 import com.light.myilists.widget.SwipeAddLayout;
 
@@ -63,7 +64,7 @@ public class MainActivity extends AppCompatActivity {
 
 
         todoInfoList = new ArrayList<TodoInfoBean>();
-        adapter = new TodoListAdapter(this,null,todoInfoList);
+        adapter = new TodoListAdapter(this,handler,todoInfoList);
 
         recyclerView = (RecyclerView)findViewById(R.id.list);
         recyclerView.setHasFixedSize(true);
@@ -75,7 +76,7 @@ public class MainActivity extends AppCompatActivity {
         handler.postAtTime(new Runnable() {
             @Override
             public void run() {
-                handler.sendEmptyMessage(0);
+                handler.sendEmptyMessage(Constant.MSG_COMMON);
             }
         },500);
 
@@ -88,8 +89,18 @@ public class MainActivity extends AppCompatActivity {
             super.handleMessage(msg);
 
             switch(msg.what){
-                case 0:
+                case Constant.MSG_COMMON:
                     refreshData();
+                    break;
+                case Constant.MSG_TODOLIST_CLICK:
+
+                    int index = msg.arg1;
+                    Intent intent = new Intent(MainActivity.this, EditTodoActivity.class);
+                    intent.putExtra(EditTodoActivity.ITEM_PRIORITY,todoInfoList.get(index).getPriority());
+                    intent.putExtra(EditTodoActivity.ITME_CONTENT,todoInfoList.get(index).getContent());
+                    intent.putExtra(EditTodoActivity.ITEM_ID,todoInfoList.get(index).getTodo_id());
+                    startActivityForResult(intent,EditTodoActivity.INTENT_ADD);
+
                     break;
             }
         }
@@ -97,25 +108,10 @@ public class MainActivity extends AppCompatActivity {
 
 
     private void refreshData(){
-        todoInfoList = DataBaseUtils.queryStudent(this);
+        todoInfoList = DataBaseUtils.queryTodoList(this);
         adapter.addInfo(todoInfoList);
     }
 
-
-
-//    @Override
-//    protected void onRestart() {
-//        super.onRestart();
-//        adapter.clearApplications();
-//
-//        handler.postAtTime(new Runnable() {
-//            @Override
-//            public void run() {
-//                handler.sendEmptyMessage(0);
-//            }
-//        },500);
-//
-//    }
 
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
@@ -149,7 +145,7 @@ public class MainActivity extends AppCompatActivity {
             handler.postAtTime(new Runnable() {
                 @Override
                 public void run() {
-                    handler.sendEmptyMessage(0);
+                    handler.sendEmptyMessage(Constant.MSG_COMMON);
                 }
             },500);
 

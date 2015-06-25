@@ -3,4 +3,7 @@
 
     <string name="hello_world">Hello world!</string>
     <string name="action_settings">Settings</string>
+
+
+    <string name="tip_poritory">颜色深浅表示TODO优先级</string>
 </resources>
