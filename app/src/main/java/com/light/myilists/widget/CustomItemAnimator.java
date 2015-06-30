@@ -18,7 +18,7 @@ public class CustomItemAnimator extends RecyclerView.ItemAnimator {
 
     @Override
     public void runPendingAnimations() {
-        int animationDuration = 800;
+        int animationDuration = 500;
         if (!mPendingAdd.isEmpty()) {
             for (final RecyclerView.ViewHolder viewHolder : mPendingAdd) {
                 View target = viewHolder.itemView;

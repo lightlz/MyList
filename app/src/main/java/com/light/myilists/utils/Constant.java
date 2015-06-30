@@ -21,5 +21,11 @@ public class Constant {
     // Handler Message
     public static final int MSG_TODOLIST_CLICK = 0x100001;
     public static final int MSG_COMMON = 0;
+    public static final int MSG_DISPLAY_TIP = 0x100002;
+
+    // http url & type
+    public static final String URL_VERSION = "http://1.mytdl.sinaapp.com/version.php";
+    public static final int TYPE_VERSION = 0x200001;
+
 
 }

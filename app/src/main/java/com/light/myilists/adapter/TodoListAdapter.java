@@ -7,9 +7,11 @@ import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.ImageView;
 import android.widget.TextView;
 
 import com.light.myilists.R;
+import com.light.myilists.db.DataBaseUtils;
 import com.light.myilists.model.TodoInfoBean;
 import com.light.myilists.utils.Constant;
 import com.light.myilists.utils.DateUtils;
@@ -73,12 +75,6 @@ public class TodoListAdapter extends RecyclerView.Adapter<TodoListAdapter.ViewHo
             @Override
             public void onClick(View view) {
 
-//                Intent intent = new Intent(context, EditTodoActivity.class);
-//                intent.putExtra(EditTodoActivity.ITEM_PRIORITY,list.get(index).getPriority());
-//                intent.putExtra(EditTodoActivity.ITME_CONTENT,list.get(index).getContent());
-//                intent.putExtra(EditTodoActivity.ITEM_ID,list.get(index).getTodo_id());
-//                context.startActivity(intent);
-
                 Message msg = new Message();
                 msg.what = Constant.MSG_TODOLIST_CLICK;
                 msg.arg1 = index;
@@ -86,6 +82,22 @@ public class TodoListAdapter extends RecyclerView.Adapter<TodoListAdapter.ViewHo
 
             }
         });
+
+        viewHolder.imgDelete.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                DataBaseUtils.deleteTodoList(context, list.get(index));
+                list.remove(index);
+                updateInfo(list);
+
+                //删除完之后，需要显示tip
+                if(list.size() == 0){
+                    handler.sendEmptyMessage(Constant.MSG_DISPLAY_TIP);
+                }
+            }
+        });
+
+
     }
 
     @Override
@@ -99,11 +111,17 @@ public class TodoListAdapter extends RecyclerView.Adapter<TodoListAdapter.ViewHo
 
         private TextView tvContent;
 
+        private ImageView imgDelete;
+
         public ViewHolder(View itemView) {
             super(itemView);
 
             tvCreatedTime = (TextView)itemView.findViewById(R.id.tv_created_time);
             tvContent = (TextView)itemView.findViewById(R.id.tv_content);
+            imgDelete = (ImageView)itemView.findViewById(R.id.img_delete);
+
         }
     }
+
+
 }

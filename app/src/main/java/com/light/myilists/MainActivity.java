@@ -8,14 +8,22 @@ import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.Toolbar;
+import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
+import android.view.View;
+import android.widget.TextView;
 
 import com.light.myilists.activity.EditTodoActivity;
 import com.light.myilists.adapter.TodoListAdapter;
 import com.light.myilists.db.DataBaseUtils;
+import com.light.myilists.http.HttpRequestMap;
+import com.light.myilists.http.HttpResponse;
 import com.light.myilists.model.TodoInfoBean;
+import com.light.myilists.model.VersionBean;
 import com.light.myilists.utils.Constant;
+import com.light.myilists.utils.VersionUtils;
+import com.light.myilists.volley.VolleyHttp;
 import com.light.myilists.widget.CustomItemAnimator;
 import com.light.myilists.widget.SwipeAddLayout;
 
@@ -33,6 +41,8 @@ public class MainActivity extends AppCompatActivity {
     private TodoListAdapter adapter;
 
     private List<TodoInfoBean> todoInfoList;
+
+    private TextView tvTip;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -62,6 +72,7 @@ public class MainActivity extends AppCompatActivity {
             }
         });
 
+        tvTip = (TextView)findViewById(R.id.tv_tip_main);
 
         todoInfoList = new ArrayList<TodoInfoBean>();
         adapter = new TodoListAdapter(this,handler,todoInfoList);
@@ -102,6 +113,15 @@ public class MainActivity extends AppCompatActivity {
                     startActivityForResult(intent,EditTodoActivity.INTENT_ADD);
 
                     break;
+                case Constant.MSG_DISPLAY_TIP:
+                    tvTip.setVisibility(View.VISIBLE);
+                    break;
+
+                case Constant.TYPE_VERSION:
+                    String response = msg.obj.toString();
+                    Log.v("response handler : ",response);
+                    handlerUpdate(response);
+                    break;
             }
         }
     };
@@ -110,6 +130,12 @@ public class MainActivity extends AppCompatActivity {
     private void refreshData(){
         todoInfoList = DataBaseUtils.queryTodoList(this);
         adapter.addInfo(todoInfoList);
+
+        if(todoInfoList.size() == 0){
+            tvTip.setVisibility(View.VISIBLE);
+        }else{
+            tvTip.setVisibility(View.GONE);
+        }
     }
 
 
@@ -127,12 +153,29 @@ public class MainActivity extends AppCompatActivity {
         // as you specify a parent activity in AndroidManifest.xml.
         int id = item.getItemId();
 
-        //noinspection SimplifiableIfStatement
-        if (id == R.id.action_settings) {
-            return true;
+
+        switch(id){
+            case R.id.action_update:
+                VolleyHttp.post(this,Constant.URL_VERSION,
+                        HttpRequestMap.versionMap(this),handler,Constant.TYPE_VERSION);
+                break;
+            case R.id.action_exit:
+                MainActivity.this.finish();
+                break;
         }
 
         return super.onOptionsItemSelected(item);
+    }
+
+    private void handlerUpdate(String versionResponse){
+
+        VersionBean bean =  HttpResponse.handlerVersionRet(versionResponse);
+        Log.v("bean : ",bean.getContent()+"\n"+bean.getUrl()+"\n"+bean.getIsforce()+"\n"+bean.getVersionCode());
+
+        if(VersionUtils.isUpdate(this,bean.getVersionCode())){
+            //弹出窗口
+        }
+
     }
 
     @Override

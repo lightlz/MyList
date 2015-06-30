@@ -62,5 +62,17 @@ public class DataBaseUtils {
         simpleTodoDao.update(infoBean);
     }
 
+    /**
+     * TODO(删除 todolist)
+     * @param context
+     * @param infoBean
+     */
+    public static void deleteTodoList(Context context,TodoInfoBean infoBean){
 
+        RuntimeExceptionDao<TodoInfoBean, Integer> simpleTodoDao = DatabaseHelper.getHelper(context)
+                .getSimpleTodoDao();
+
+        simpleTodoDao.delete(infoBean);
+
+    }
 }
