@@ -12,6 +12,7 @@ import com.light.myilists.R;
 import com.light.myilists.db.DataBaseUtils;
 import com.light.myilists.model.TodoInfoBean;
 import com.light.myilists.utils.Constant;
+import com.umeng.analytics.MobclickAgent;
 
 /**
  * Created by light on 15/6/23.
@@ -126,5 +127,14 @@ public class EditTodoActivity extends Activity implements View.OnClickListener{
             this.finish();
         }
 
+    }
+
+    public void onResume() {
+        super.onResume();
+        MobclickAgent.onResume(this);
+    }
+    public void onPause() {
+        super.onPause();
+        MobclickAgent.onPause(this);
     }
 }

@@ -12,6 +12,7 @@
     <uses-permission android:name="android.permission.CHANGE_WIFI_STATE" />
     <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE" />
     <uses-permission android:name="android.permission.ACCESS_WIFI_STATE" />
+    <uses-permission android:name="android.permission.READ_PHONE_STATE"/>
     <!--<uses-permission android:name="android.permission.ACCESS_GPS"/>-->
 
     <application
@@ -29,6 +30,11 @@
             </intent-filter>
         </activity>
         <activity android:name=".activity.EditTodoActivity"/>
+
+
+        <meta-data android:value="55935f7667e58e24df00038c" android:name="UMENG_APPKEY"></meta-data>
+        <meta-data android:value="Channel ID" android:name="UMENG_CHANNEL"/>
+
     </application>
 
 </manifest>

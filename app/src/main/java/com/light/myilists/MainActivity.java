@@ -26,6 +26,7 @@ import com.light.myilists.utils.VersionUtils;
 import com.light.myilists.volley.VolleyHttp;
 import com.light.myilists.widget.CustomItemAnimator;
 import com.light.myilists.widget.SwipeAddLayout;
+import com.umeng.analytics.MobclickAgent;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -48,6 +49,8 @@ public class MainActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
+        //you meng
+        MobclickAgent.updateOnlineConfig( this );
         initView();
     }
 
@@ -193,5 +196,14 @@ public class MainActivity extends AppCompatActivity {
 
         }
 
+    }
+
+    public void onResume() {
+        super.onResume();
+        MobclickAgent.onResume(this);
+    }
+    public void onPause() {
+        super.onPause();
+        MobclickAgent.onPause(this);
     }
 }
