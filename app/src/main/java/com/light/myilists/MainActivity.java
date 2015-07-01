@@ -170,10 +170,9 @@ public class MainActivity extends AppCompatActivity {
     private void handlerUpdate(String versionResponse){
 
         VersionBean bean =  HttpResponse.handlerVersionRet(versionResponse);
-        Log.v("bean : ",bean.getContent()+"\n"+bean.getUrl()+"\n"+bean.getIsforce()+"\n"+bean.getVersionCode());
 
         if(VersionUtils.isUpdate(this,bean.getVersionCode())){
-            //弹出窗口
+            VersionUtils. displayUpdateDialog(this,bean.getContent(),bean.getUrl());
         }
 
     }
