@@ -13,6 +13,7 @@ import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.light.myilists.activity.EditTodoActivity;
 import com.light.myilists.adapter.TodoListAdapter;
@@ -176,6 +177,8 @@ public class MainActivity extends AppCompatActivity {
 
         if(VersionUtils.isUpdate(this,bean.getVersionCode())){
             VersionUtils. displayUpdateDialog(this,bean.getContent(),bean.getUrl());
+        }else{
+            Toast.makeText(this,this.getString(R.string.tip_last_version),Toast.LENGTH_SHORT).show();
         }
 
     }

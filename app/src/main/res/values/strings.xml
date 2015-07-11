@@ -9,6 +9,7 @@
 
     <string name="tip_poritory">颜色深浅表示TODO优先级</string>
     <string name="tip_main">下拉可添加Todo，颜色可标记优先级</string>
+    <string name="tip_last_version">已是最新版本</string>
 
     
     <string name="dialog_update">版本更新</string>
