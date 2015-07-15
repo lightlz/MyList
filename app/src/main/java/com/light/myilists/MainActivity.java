@@ -1,5 +1,6 @@
 package com.light.myilists;
 
+import android.annotation.TargetApi;
 import android.content.Intent;
 import android.os.Bundle;
 import android.os.Handler;
@@ -12,6 +13,9 @@ import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
+import android.view.Window;
+import android.view.WindowManager;
+import android.widget.RelativeLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -46,12 +50,17 @@ public class MainActivity extends AppCompatActivity {
 
     private TextView tvTip;
 
+    private RelativeLayout layout;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
         //you meng
-        MobclickAgent.updateOnlineConfig( this );
+        MobclickAgent.updateOnlineConfig(this);
+
+
+
         initView();
     }
 
@@ -59,6 +68,18 @@ public class MainActivity extends AppCompatActivity {
 
         toolbar = (Toolbar)findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
+
+//        layout = (RelativeLayout)findViewById(R.id.layout_main);
+//
+//        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.KITKAT) {
+//            setTranslucentStatus(true);
+//        }
+//
+//        SystemBarTintManager tintManager = new SystemBarTintManager(this);
+//        tintManager.setStatusBarTintEnabled(true);
+//        tintManager.setStatusBarTintResource(R.color.cyan800);
+//        SystemBarTintManager.SystemBarConfig config = tintManager.getConfig();
+//        layout.setPadding(0, config.getPixelInsetTop(true), 0, config.getPixelInsetBottom());
 
         swipeAddLayout = (SwipeAddLayout)findViewById(R.id.swipe_container);
         swipeAddLayout.setColorSchemeColors(getResources().getColor(R.color.cyan700));
@@ -195,7 +216,7 @@ public class MainActivity extends AppCompatActivity {
                 public void run() {
                     handler.sendEmptyMessage(Constant.MSG_COMMON);
                 }
-            },500);
+            }, 500);
 
         }
 
@@ -209,4 +230,22 @@ public class MainActivity extends AppCompatActivity {
         super.onPause();
         MobclickAgent.onPause(this);
     }
+
+
+
+    @TargetApi(19)
+    private void setTranslucentStatus(boolean on) {
+        Window win = getWindow();
+        WindowManager.LayoutParams winParams = win.getAttributes();
+        final int bits = WindowManager.LayoutParams.FLAG_TRANSLUCENT_STATUS;
+        if (on) {
+            winParams.flags |= bits;
+        } else {
+            winParams.flags &= ~bits;
+        }
+        win.setAttributes(winParams);
+    }
+
+
+
 }
